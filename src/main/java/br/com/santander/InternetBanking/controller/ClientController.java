@@ -5,10 +5,16 @@ import br.com.santander.InternetBanking.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,4 +38,19 @@ public class ClientController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping(value = "{id}/deposit")
+    public ResponseEntity<String> deposit(@PathVariable("id") Long id,
+                                          @RequestBody BigDecimal amount) {
+        BigDecimal balance = service.deposit(id, amount);
+        return ResponseEntity.ok("Your balance now is $" + balance.toString());
+    }
+
+    @PatchMapping(value = "{id}/withdraw")
+    public ResponseEntity<String> withdraw(@PathVariable("id") Long id,
+                                          @RequestBody BigDecimal amount) {
+        BigDecimal balance = service.withdraw(id, amount);
+        return ResponseEntity.ok(String.format("Your balance now is $%s", balance.toString()));
+    }
+
 }
