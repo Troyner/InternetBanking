@@ -4,6 +4,7 @@ import br.com.santander.InternetBanking.dto.ClientDTO;
 import br.com.santander.InternetBanking.mapper.ClientMapper;
 import br.com.santander.InternetBanking.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,4 +25,10 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
+
+    public List<ClientDTO> get(Integer page, Integer size) {
+        return repository.findAll(PageRequest.of(page, size)).stream()
+                .map(clientMapper::convertToDto)
+                .collect(Collectors.toList());
+    }
 }

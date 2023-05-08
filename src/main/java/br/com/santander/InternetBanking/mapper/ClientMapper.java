@@ -6,6 +6,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.ZoneId;
+
 @Component
 public class ClientMapper {
 
@@ -13,6 +15,10 @@ public class ClientMapper {
     private ModelMapper modelMapper;
 
     public ClientDTO convertToDto(Client client) {
-        return modelMapper.map(client, ClientDTO.class);
+        ClientDTO clientDTO = modelMapper.map(client, ClientDTO.class);
+        clientDTO.setBirthdayDate(client.getBirthdayDate().toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate());
+        return clientDTO;
     }
 }
