@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping(path = "clients")
@@ -24,17 +23,9 @@ public class ClientController {
     private ClientService service;
 
     @GetMapping
-    public ResponseEntity<List<ClientDTO>> get(@RequestParam(required = false) Integer page,
-                                               @RequestParam(required = false) Integer size) {
-        List<ClientDTO> response;
-
-        if (Objects.isNull(size)) {
-            response = service.get();
-        } else {
-            response = service.get(page, size);
-        }
-
-        return ResponseEntity.ok(response);
+    public ResponseEntity<List<ClientDTO>> get(@RequestParam Integer page,
+                                               @RequestParam Integer size) {
+        return ResponseEntity.ok(service.get(page, size));
     }
 
     @PatchMapping(value = "{id}/deposit")

@@ -1,4 +1,4 @@
-package br.com.santander.InternetBanking;
+package br.com.santander.InternetBanking.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

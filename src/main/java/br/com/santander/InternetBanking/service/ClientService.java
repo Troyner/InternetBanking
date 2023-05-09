@@ -1,8 +1,8 @@
 package br.com.santander.InternetBanking.service;
 
-import br.com.santander.InternetBanking.Fee;
 import br.com.santander.InternetBanking.dto.ClientDTO;
 import br.com.santander.InternetBanking.entity.Client;
+import br.com.santander.InternetBanking.enums.Transaction;
 import br.com.santander.InternetBanking.mapper.ClientMapper;
 import br.com.santander.InternetBanking.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +13,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static br.com.santander.InternetBanking.Fee.EXEMPTION_TAX;
-import static br.com.santander.InternetBanking.Fee.MAX_TAX;
-import static br.com.santander.InternetBanking.Fee.MIN_TAX;
+import static br.com.santander.InternetBanking.enums.Fee.EXEMPTION_TAX;
+import static br.com.santander.InternetBanking.enums.Fee.MAX_TAX;
+import static br.com.santander.InternetBanking.enums.Fee.MIN_TAX;
 
 @Service
 public class ClientService {
@@ -24,18 +24,14 @@ public class ClientService {
     private ClientRepository repository;
 
     @Autowired
-    private ClientMapper clientMapper;
+    private ClientMapper mapper;
 
-    public List<ClientDTO> get() {
-        return repository.findAll().stream()
-                .map(clientMapper::convertToDto)
-                .collect(Collectors.toList());
-    }
-
+    @Autowired
+    private TransactionService transactionService;
 
     public List<ClientDTO> get(Integer page, Integer size) {
         return repository.findAll(PageRequest.of(page, size)).stream()
-                .map(clientMapper::convertToDto)
+                .map(mapper::convertToDto)
                 .collect(Collectors.toList());
     }
 
@@ -43,6 +39,7 @@ public class ClientService {
         Client client = repository.getReferenceById(id);
         client.setBalance(client.getBalance().add(amount));
         repository.save(client);
+        transactionService.save(Transaction.DEPOSIT, amount);
         return client.getBalance();
     }
 
@@ -52,6 +49,7 @@ public class ClientService {
                         .multiply(amount);
         client.setBalance(client.getBalance().subtract(amountWithFee));
         repository.save(client);
+        transactionService.save(Transaction.WITHDRAW, amount);
         return client.getBalance();
     }
 

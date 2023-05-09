@@ -11,32 +11,26 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "CLIENTS")
+@Table(name = "TRANSACTIONS")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Client {
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "NAME")
-    private String name;
+    @Column(name = "DATETIME")
+    private LocalDateTime dateTime;
 
-    @Column(name = "EXCLUSIVE")
-    private Boolean exclusive;
+    @Column(name = "TRANSACTION_NAME")
+    private String transactionName;
 
-    @Column(name = "BALANCE")
-    private BigDecimal balance;
-
-    @Column(name = "ACCOUNT_NUMBER")
-    private String accountNumber;
-
-    @Column(name = "BIRTHDAY_DATE")
-    private Date birthdayDate;
+    @Column(name = "AMOUNT")
+    private BigDecimal amount;
 
 }
