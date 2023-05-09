@@ -28,18 +28,22 @@ public class ClientController {
         return ResponseEntity.ok(service.get(page, size));
     }
 
-    @PatchMapping(value = "{id}/deposit")
+     @PatchMapping(value = "{id}/deposit")
     public ResponseEntity<String> deposit(@PathVariable("id") Long id,
                                           @RequestBody BigDecimal amount) {
         BigDecimal balance = service.deposit(id, amount);
-        return ResponseEntity.ok("Your balance now is $" + balance.toString());
+        return ResponseEntity.ok(formatBalance(balance));
     }
 
     @PatchMapping(value = "{id}/withdraw")
     public ResponseEntity<String> withdraw(@PathVariable("id") Long id,
                                           @RequestBody BigDecimal amount) {
         BigDecimal balance = service.withdraw(id, amount);
-        return ResponseEntity.ok(String.format("Your balance now is $%s", balance.toString()));
+        return ResponseEntity.ok(formatBalance(balance));
+    }
+
+    private String formatBalance(BigDecimal balance) {
+        return String.format("Your balance now is $%s", balance.toString());
     }
 
 }
